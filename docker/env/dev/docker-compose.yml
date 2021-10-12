@@ -1,0 +1,36 @@
+version: '3.5'
+
+services:
+  testmoney_backend:
+    image: testmoney_backend
+    build:
+      context: ../../../
+      dockerfile: docker/src/backend/Dockerfile
+    volumes:
+      - ../../../:/app
+
+  testmoney_frontend:
+    image: testmoney_frontend
+    build:
+      context: ../../../
+      dockerfile: docker/src/frontend/Dockerfile
+    ports:
+      - 80:80
+    links:
+      - testmoney_backend
+    volumes:
+      - ../../../:/app
+      - ../../../docker/src/frontend/vhost.conf:/etc/nginx/conf.d/vhost.conf
+
+  testmoney_postgres:
+    image: percona/percona-server:5.7
+    ports:
+      - 3367:3306
+    environment:
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: 12341234
+      MYSQL_ROOT_PASSWORD: 12341234
+      MYSQL_RANDOM_ROOT_PASSWORD: 12341234
+    volumes:
+      - /app/mysql/testmoneymysql:/var/lib/mysql
