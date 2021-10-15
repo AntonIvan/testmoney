@@ -13,13 +13,22 @@ class CreateFailedJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('failed_jobs', function (Blueprint $table) {
+        Schema::create('currency', function (Blueprint $table) {
             $table->id();
-            $table->text('connection');
-            $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
-            $table->timestamp('failed_at')->useCurrent();
+            $table->string('name')->unique();
+        });
+
+        Schema::create('date', function (Blueprint $table) {
+            $table->id();
+            $table->date('date')->unique();
+        });
+
+        Schema::create('course_currency', function (Blueprint $table) {
+            $table->id();
+            $table->decimal("course", 8, 4);
+            $table->integer('currency_id');
+            $table->integer('date_id');
+            $table->index(['date_id', 'currency_id'], 'unique_currency_date');
         });
     }
 
@@ -30,6 +39,8 @@ class CreateFailedJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('failed_jobs');
+        Schema::dropIfExists('currency');
+        Schema::dropIfExists('date');
+        Schema::dropIfExists('course_currency');
     }
 }
