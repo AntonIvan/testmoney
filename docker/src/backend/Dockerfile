@@ -29,3 +29,4 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-install -j$(nproc) opcache zip curl pdo pgsql pdo_pgsql pdo_mysql gd \
   && curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
+  && crontab -l | cat - ./docker/src/backend/schedule.txt >crontab.txt && crontab crontab.txt
